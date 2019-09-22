@@ -1,6 +1,7 @@
 from typyboi import world
-from typyboi.tiles import MapTile, LootRoom
+from typyboi.tiles import MapTile, LootRoom, EnemyRoom
 from typyboi.player import Player
+import factory
 
 def main():
     while True:
@@ -28,7 +29,8 @@ def main():
 if __name__ == '__main__':
     world.add_tile(MapTile(0, 0, "First room"))
     world.add_tile(MapTile(0, 0, "First room"))
-    world.add_tile(LootRoom(1, 0, "East loot room", [], 5))
+    world.add_tile(LootRoom(1, 0, "East loot room", [factory.dagger()], 5))
+    world.add_tile(EnemyRoom(1, 1, 'A spider room', 'A spider attacks', factory.spider() ))
     _player = Player(0, 0 , 100)
     try:
         main()
