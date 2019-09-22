@@ -1,4 +1,6 @@
-from typyboi import player, items, tiles, world
+from typyboi import world
+from typyboi.tiles import MapTile, LootRoom
+from typyboi.player import Player
 
 def main():
     while True:
@@ -24,10 +26,10 @@ def main():
 
 
 if __name__ == '__main__':
-    world.add_tile(tiles.MapTile(0, 0, "First room"))
-    world.add_tile(tiles.MapTile(0, 0, "First room"))
-    world.add_tile(tiles.LootRoom(1, 0, "East loot room", [], 5))
-    _player = player.Player(0, 0 , 100)
+    world.add_tile(MapTile(0, 0, "First room"))
+    world.add_tile(MapTile(0, 0, "First room"))
+    world.add_tile(LootRoom(1, 0, "East loot room", [], 5))
+    _player = Player(0, 0 , 100)
     try:
         main()
     except KeyboardInterrupt:
