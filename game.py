@@ -1,21 +1,30 @@
-from typyboi import player, items, tiles, world
+from typyboi.world import World
+from typyboi.tiles import MapTile, LootRoom, EnemyRoom
+from typyboi.player import Player
+import factory
 
-_player = None
-
-def main():
+def game_loop():
+    player = Player(0, 0, 100)
+    world = World()
+    world.add_tile(MapTile(0, 0, "First room"))
+    world.add_tile(LootRoom(1, 0, "East loot room", [factory.dagger()], 5))
+    world.add_tile(EnemyRoom(1, 1, 'A spider room', factory.spider() ))
     while True:
-        room = world.get_tile(_player.location_x, _player.location_y)
-        room.modify_player(_player)
-        if(_player.is_alive()):
-            print('Choose an actions:\n')
-            available_actions = room.available_actions()
-            print(available_actions)
+        if player.moved:
+            room = world.get_tile(player.location_x, player.location_y)
+            room.modify_player(player)
+            print(room.flavor_text)
+            player.moved = False
+        if player.is_alive() and not player.victory:
+            print('Choose an action:\n')
+            available_actions = room.available_actions(world)
             for action in available_actions:
                 print(action)
             action_input = input('Action: ')
+            print()
             for action in available_actions:
                 if action_input == action.hotkey:
-                    _player.do_action(action, **action.kwargs)
+                    player.do_action(action, **action.kwargs)
                     break
         else:
             break
@@ -23,7 +32,8 @@ def main():
 
 
 if __name__ == '__main__':
-    world.add_tile(tiles.MapTile(0, 0, "First room"))
-    world.add_tile(tiles.LootRoom(1, 0, "East loot room", [], 5))
-    _player = player.Player(0, 0 , 100)
-    main()
+    try:
+        game_loop()
+    except KeyboardInterrupt:
+        print()
+        exit(0)
