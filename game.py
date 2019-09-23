@@ -4,18 +4,22 @@ from typyboi.player import Player
 import factory
 
 def game_loop():
-    player = Player(0, 0, 100)
-    world = World()
+    player = Player(0, 0, 100) # Instantiate the Player object
+    world = World() # Instantiate the World object
+    # add tiles to the world
     world.add_tile(MapTile(0, 0, "First room"))
     world.add_tile(LootRoom(1, 0, "East loot room", [factory.dagger()], 5))
     world.add_tile(EnemyRoom(1, 1, 'A spider room', factory.spider() ))
+    # Main game loop
     while True:
         if player.moved:
+            # Let the world change the player
             room = world.get_tile(player.location_x, player.location_y)
             room.modify_player(player)
+            # Print the worlds flavor text
             print(room.flavor_text)
-            player.moved = False
         if player.is_alive() and not player.victory:
+            # Display available actions to the player
             print('Choose an action:\n')
             available_actions = room.available_actions(world)
             for action in available_actions:
@@ -26,7 +30,11 @@ def game_loop():
                 if action_input == action.hotkey:
                     player.do_action(action, **action.kwargs)
                     break
-        else:
+        elif not player.is_alive():
+            print('You have fallen')
+            break
+        elif player.victory:
+            print('You win')
             break
 
 
